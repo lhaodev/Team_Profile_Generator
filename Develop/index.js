@@ -35,14 +35,16 @@ function buildTeam() {
 
                 {
                     type: 'input',
-                    name: 'managerID',
+                    name: 'managerId',
                     message: "What is the manager's ID",
                     validate(value) {
-                        if (typeof (value) === "number") {
+                        var pass = value.match(
+                            /^[1-9]\d*$/
+                        );
+                        if (pass) {
                             return true;
-                        } else {
-                            return "Please enter a number. "
                         }
+                        return "Please enter a number. "
                     }
                 },
 
@@ -51,11 +53,16 @@ function buildTeam() {
                     name: 'managerEmail',
                     message: "What is the email",
                     validate(value) {
-                        if (value.includes("@")) {
+
+                        var pass = value.match(
+                            /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+                        );
+                        if (pass) {
                             return true;
-                        } else {
-                            return "Please enter a valid email address. "
                         }
+                        return "Please enter a valid email. "
+
+
                     }
                 },
 
@@ -65,11 +72,13 @@ function buildTeam() {
                     name: 'officeNumber',
                     message: "What is the office number",
                     validate(value) {
-                        if (typeof (value) === "number") {
+                        var pass = value.match(
+                            /^[1-9]\d*$/
+                        );
+                        if (pass) {
                             return true;
-                        } else {
-                            return "Please enter a number. "
                         }
+                        return "Please enter a number. "
                     }
                 },
             ])
@@ -94,17 +103,17 @@ function buildTeam() {
                 type: 'list',
                 name: 'position',
                 message: "What type of employees you want to add?",
-                choice: [
+                choices: [
                     "Engineer",
                     "Intern",
                     "I don't want to add more employees",
                 ]
             }
         ]).then(userChoice => {
-            if (userChoice.choice === "Engineer") {
+            if (userChoice.position === "Engineer") {
                 addEngineer()
 
-            } else if (userChoice.choice === "Intern") {
+            } else if (userChoice.position === "Intern") {
                 addIntern()
             } else {
                 generateResult()
@@ -135,14 +144,16 @@ function buildTeam() {
 
                 {
                     type: 'input',
-                    name: 'engineerID',
+                    name: 'engineerId',
                     message: "What is the engineer's ID?",
                     validate(value) {
-                        if (typeof (value) === "number") {
+                        var pass = value.match(
+                            /^[1-9]\d*$/
+                        );
+                        if (pass) {
                             return true;
-                        } else {
-                            return "Please enter a number. "
                         }
+                        return "Please enter a number. "
                     }
                 },
 
@@ -151,11 +162,16 @@ function buildTeam() {
                     name: 'engineerEmail',
                     message: "What is the email?",
                     validate(value) {
-                        if (value.includes("@")) {
+
+                        var pass = value.match(
+                            /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+                        );
+                        if (pass) {
                             return true;
-                        } else {
-                            return "Please enter a valid email address. "
                         }
+                        return "Please enter a valid email. "
+
+
                     }
                 },
 
@@ -209,14 +225,16 @@ function buildTeam() {
 
                 {
                     type: 'input',
-                    name: 'internID',
+                    name: 'internId',
                     message: "What is the intern's ID?",
                     validate(value) {
-                        if (typeof (value) === "number") {
+                        var pass = value.match(
+                            /^[1-9]\d*$/
+                        );
+                        if (pass) {
                             return true;
-                        } else {
-                            return "Please enter a number. "
                         }
+                        return "Please enter a number. "
                     }
                 },
 
@@ -225,11 +243,16 @@ function buildTeam() {
                     name: 'internEmail',
                     message: "What is the email?",
                     validate(value) {
-                        if (value.includes("@")) {
+
+                        var pass = value.match(
+                            /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+                        );
+                        if (pass) {
                             return true;
-                        } else {
-                            return "Please enter a valid email address. "
                         }
+                        return "Please enter a valid email. "
+
+
                     }
                 },
 
@@ -251,7 +274,7 @@ function buildTeam() {
                 const intern = new Intern(
                     response.internName,
                     response.internId,
-                    response.internmail,
+                    response.internEmail,
                     response.internSchool
                 );
                 teamMembers.push(intern);
@@ -265,15 +288,16 @@ function buildTeam() {
 
 
 
-    addManagers();
 
 
     function generateResult() {
-
+        if (!fs.existsSync(OUTPUT_DIR)) {
+            fs.mkdirSync(OUTPUT_DIR)
+        }
+        fs.writeFileSync(outputPath, render(teamMembers), "UTF-8")
     }
 
-
-
+    addManagers();
 
 }
 // After the user has input all employees desired, call the `render` function (required
